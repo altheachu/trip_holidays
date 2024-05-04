@@ -1,0 +1,30 @@
+<%-include("partials/header.ejs")%>
+
+<div class="content_container">
+  <div class="query_mask"></div>
+  <div class="query_container">
+    <form action="/" method="post">
+      <span class="date">
+        <label for="startDate">Start Date</label>
+        <input type="date" name="startDate" placeholder="2024-04-01"/>
+        <label for="endDate">End Date</label>
+        <input type="date" name="endDate" placeholder="2024-04-30"/>
+      </span>
+      <span>  
+        <label for="destination">Destination</label>
+        <select name="destination">
+          <% for (let country of countries) { %>
+            <option value="<%=country.countryCode%>" selected><%=country.name%></option>
+          <% } %>
+        </select>
+      </span>  
+      <span class="btn">
+        <input type="submit" value="search">
+      </span>
+    </form>
+  </div>
+
+
+</div>
+
+<%-include("partials/footer.ejs")%>
