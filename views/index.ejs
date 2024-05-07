@@ -3,7 +3,7 @@
 <div class="content_container">
   <div class="query_mask"></div>
   <div class="query_container">
-    <form action="/" method="post">
+    <form action="/search" method="post">
       <span class="date">
         <label for="startDate">Start Date</label>
         <input type="date" name="startDate" placeholder="2024-04-01"/>
@@ -12,11 +12,13 @@
       </span>
       <span>  
         <label for="destination">Destination</label>
-        <select name="destination">
-          <% for (let country of countries) { %>
-            <option value="<%=country.countryCode%>" selected><%=country.name%></option>
-          <% } %>
-        </select>
+        <%if(locals.country){%>
+          <select name="destination">
+            <% for (let country of countries) { %>
+              <option value="<%=country.countryCode%>" selected><%=country.name%></option>
+            <% } %>
+          </select>
+        <%}%>
       </span>  
       <span class="btn">
         <input type="submit" value="search">
