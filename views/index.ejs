@@ -10,23 +10,30 @@
         <label for="endDate">End Date</label>
         <input type="date" name="endDate" placeholder="2024-04-30"/>
       </span>
-      <span>  
+      <span class="sel">  
         <label for="destination">Destination</label>
-        <%if(locals.country){%>
-          <select name="destination">
-            <% for (let country of countries) { %>
-              <option value="<%=country.countryCode%>" selected><%=country.name%></option>
-            <% } %>
+          <select  name="destination">
+            <%if(locals.countries){%>
+              <% for (let country of countries) { %>
+                <option value="<%=country.countryCode%>" selected><%=country.name%></option>
+              <% } %>
+            <%}%>
           </select>
-        <%}%>
       </span>  
       <span class="btn">
         <input type="submit" value="search">
       </span>
     </form>
   </div>
-
-
+  <div class="result_container">
+    <%if(locals.msgShow || locals.tableShow ){%>
+      <%if(locals.errorMsg){%>
+        <%if(msgShow==='Y'){%>
+          <span class="msg"><%=errorMsg%></span>
+        <%}%>
+      <%}%>
+    <%}%>
+  </div>
 </div>
 
 <%-include("partials/footer.ejs")%>

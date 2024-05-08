@@ -29,18 +29,25 @@ app.get("/", async (req, res) => {
 
 app.post("/search", async (req, res) => {
   try {
-    console.log('req', req.body);
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
     const destination = req.body.destination;
     if (!validation(startDate, endDate, destination)){
-      console.log("not pass validation");
-      res.render("index.ejs", null); 
+      const result = await axios.get(API_URL + "/api/v3/AvailableCountries");
+      const uiParamObj = {
+        errorMsg: 'StartDate, endDate, destination should not be empty. StartDate must be earlier than endDate.',
+        msgShow: 'Y',
+        countries: result.data,
+      }
+      res.render("index.ejs", uiParamObj); 
     } else {
       if(getDateYear(startDate) == getDateYear(endDate)){
         const result = await axios.get(API_URL + `/api/v3/PublicHolidays/${getDateYear(startDate)}/${destination}`);
-        console.log(result);
-        // filter
+        const rList = result.data;
+        let newResultList = rList.filter((item) => {
+          return filterByDate(item, startDate, endDate)
+        });
+        console.log(newResultList);
         res.render("index.ejs", null);
       } else {
 
@@ -51,6 +58,14 @@ app.post("/search", async (req, res) => {
   }
   
 })
+
+function filterByDate(item, startDate, endDate){
+  if(dateCompare(item.date, startDate) <= 0 && dateCompare(item.date, endDate) >= 0){
+    return true;
+  } else {
+    return false;
+  }
+}
 
 function validation(startDate, endDate, destination){
   let flag = true;

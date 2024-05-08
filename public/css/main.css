@@ -18,6 +18,14 @@ footer {
   width: 120px;
 }
 
+.sel > select {
+  border-radius: 10px;
+  padding: 3px 0px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: medium;
+  width: 200px;
+}
+
 .btn > input {
   border: 0px;
   border-radius: 10px;
@@ -66,4 +74,19 @@ footer {
 .claim{
   color: #3c7f95;
   font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.result_container{
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: large;
+  position: absolute;
+  z-index: 2;
+  padding-top: 5%;
+  padding-bottom: 1%;
+  left: 25%;
+}
+
+.msg{
+  background-color: #3c7f95;
+  color: white;
 }
