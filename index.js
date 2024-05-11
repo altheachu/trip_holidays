@@ -32,14 +32,18 @@ app.post("/search", async (req, res) => {
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
     const destination = req.body.destination;
+    const countriesResult = await axios.get(API_URL + "/api/v3/AvailableCountries");
     if (!validation(startDate, endDate, destination)){
-      const result = await axios.get(API_URL + "/api/v3/AvailableCountries");
-      const uiParamObj = {
-        errorMsg: 'StartDate, endDate, destination should not be empty. StartDate must be earlier than endDate.',
-        msgShow: 'Y',
-        countries: result.data,
-      }
-      res.render("index.ejs", uiParamObj); 
+      // TODO 改成前端驗證
+      // const uiParamObj = {
+      //   errorMsg: 'StartDate, endDate, destination should not be empty. StartDate must be earlier than endDate.',
+      //   emptyMsg: undefined,
+      //   msgShow: 'Y',
+      //   tableShow: 'N',
+      //   countries: countriesResult.data,
+      // }
+      // res.render("index.ejs", uiParamObj); 
+      res.redirect('/');
     } else {
       if(getDateYear(startDate) == getDateYear(endDate)){
         const result = await axios.get(API_URL + `/api/v3/PublicHolidays/${getDateYear(startDate)}/${destination}`);
@@ -48,7 +52,19 @@ app.post("/search", async (req, res) => {
           return filterByDate(item, startDate, endDate)
         });
         console.log(newResultList);
-        res.render("index.ejs", null);
+        const msgShow = newResultList.length > 0? 'N': 'Y';
+        const tableShow = newResultList.length > 0? 'Y' : 'N';
+        const tmpMsg = `No National Holidays in ${destination} during ${startDate} and ${endDate}`;
+        const emptyMsg = newResultList.length > 0? '': tmpMsg;
+
+        const uiParamObj = {
+          holidayList: newResultList,
+          msgShow: msgShow,
+          tableShow: tableShow,
+          emptyMsg: emptyMsg,
+          countries: countriesResult.data,
+        };
+        res.render("index.ejs", uiParamObj);
       } else {
 
       }

@@ -87,6 +87,8 @@ footer {
 }
 
 .msg{
-  background-color: #3c7f95;
+  background-color: #000000;
   color: white;
+  padding: 5px;
+  border-radius: 5px;
 }

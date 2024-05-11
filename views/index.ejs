@@ -3,7 +3,7 @@
 <div class="content_container">
   <div class="query_mask"></div>
   <div class="query_container">
-    <form action="/search" method="post">
+    <form action="/search" method="post" onsubmit="return test()">
       <span class="date">
         <label for="startDate">Start Date</label>
         <input type="date" name="startDate" placeholder="2024-04-01"/>
@@ -28,12 +28,22 @@
   <div class="result_container">
     <%if(locals.msgShow || locals.tableShow ){%>
       <%if(locals.errorMsg){%>
-        <%if(msgShow==='Y'){%>
-          <span class="msg"><%=errorMsg%></span>
+        <%if(msgShow==='Y' && errorMsg!==undefined){%>
+          <div class="msg"><%=errorMsg%></div>
         <%}%>
+      <%}%>
+      <%if(msgShow==='Y' && tableShow==='N'){%>
+        <div class="msg"><%=emptyMsg%></div>
       <%}%>
     <%}%>
   </div>
 </div>
 
 <%-include("partials/footer.ejs")%>
+
+<script>
+  function test(){
+    alert('test');
+    return false;
+  }
+</script>
