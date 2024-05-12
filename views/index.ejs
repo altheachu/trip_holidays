@@ -31,7 +31,7 @@
   </div>
   <div class="result_container">
     <div class="msg">Find no result</div>
-    <div></div>     
+    <div id="test"></div>     
   </div>
 </div>
 
@@ -59,6 +59,18 @@
           let result = JSON.parse(xhr.responseText);
           console.log(result);
           document.querySelectorAll(".msg")[0].innerHTML = result.holidayList[0].localName;
+          const theadList = ["Date", "Name", "Local Name", "Type", "Global"];
+          let theadContent = "";
+          for(let i = 0; i < 5; i++){
+            theadContent += `<th>${theadList[i]}</th>`;
+          }
+
+          let theadStr = `<thead><tr>${theadContent}</tr></thead>`;
+          let captionStr = "<caption>Holiday List</caption>";
+          let tbodyStr = "";
+          let tableStr = `<table width='800px'>${captionStr}${theadStr}${tbodyStr}</table>`;
+
+          document.getElementById("test").innerHTML = tableStr;
           // await reloadPage();
         }
       }
@@ -138,19 +150,14 @@
       </tr>
     </thead>
     <tbody>
-      /*<%for(let holiday of holidayList){%>*/
         <tr>
-          <th scope="row"><%=holiday.date%></th>
-          <td><%=holiday.name%></td>
-          <td><%=holiday.localName%></td>
+          <th scope="row"></th>
+          <td></td>
+          <td></td>
           <td>
-            <%for(let type of holiday.types){%>
-              <%=type%>
-            <%}%>
             </td>
-          <td><%=holiday.global%></td>
+          <td></td>
         </tr>
-      <%}%>
     </tbody>
     表尾-->
     <!-- <tfoot>
