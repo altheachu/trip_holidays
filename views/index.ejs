@@ -3,7 +3,7 @@
 <div class="content_container">
   <div class="query_mask"></div>
   <div class="query_container">
-    <form name="queryForm" action="/search" method="post" onsubmit="return validation()">
+    <form name="queryForm">
       <span class="date">
         <%if(locals.startDate){%>
           <label for="startDate">Start Date</label>
@@ -25,58 +25,47 @@
           </select>
       </span>  
       <span class="btn">
-        <input type="submit" value="search">
+        <button name="button" type="button">search</button>
       </span>
     </form>
   </div>
   <div class="result_container">
-    <%if(locals.emptyFlag){%>
-      <div class="msg">Find no result</div>
-    <%}%>
-    <%if(locals.holidayList){%>
-      <div class="table">
-        <table width="800px">
-          <!--圖表說明-->
-          <!-- <caption>Holiday List</caption> -->
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Name</th>
-              <th scope="col">Local Name</th>
-              <th scope="col">Type</th>
-              <th scope="col">Global</th>
-            </tr>
-          </thead>
-          <tbody>
-            <%for(let holiday of holidayList){%>
-              <tr>
-                <th scope="row"><%=holiday.date%></th>
-                <td><%=holiday.name%></td>
-                <td><%=holiday.localName%></td>
-                <td>
-                  <%for(let type of holiday.types){%>
-                    <%=type%>
-                  <%}%>
-                  </td>
-                <td><%=holiday.global%></td>
-              </tr>
-            <%}%>
-          </tbody>
-          <!--表尾-->
-          <!-- <tfoot>
-            <tr>
-              <th scope="row">Total Days</th>
-              <td colspan="4">holidayList.length</td>
-            </tr>
-          </tfoot> -->
-        </table>
-    <%}%>
+    <div class="msg">Find no result</div>
+    <div></div>     
   </div>
 </div>
 
 <%-include("partials/footer.ejs")%>
 
 <script>
+  const queryFormBtn = document.forms["queryForm"]["button"];
+  queryFormBtn.addEventListener("click", function(event){
+    event.preventDefault();
+    if (validation()){
+      let startDate = document.forms["queryForm"]["startDate"].value;
+      let endDate = document.forms["queryForm"]["endDate"].value;
+      let destination = document.forms["queryForm"]["destination"].value;
+      const data = {
+        startDate: startDate, 
+        endDate: endDate,
+        destination: destination,
+      };
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", "/search", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = async () => {
+        if(xhr.readyState===4 && xhr.status===200){
+          console.log("request success");
+          let result = JSON.parse(xhr.responseText);
+          console.log(result);
+          document.querySelectorAll(".msg")[0].innerHTML = result.holidayList[0].localName;
+          // await reloadPage();
+        }
+      }
+      xhr.send(JSON.stringify(data));
+    }
+  });
+
   document.getElementsByName("startDate")[0].addEventListener("click", function(){
     document.querySelectorAll(".msg").forEach((t)=>{
       t.style.display = "none";
@@ -114,6 +103,14 @@
     return flag;
   }
 
+  async function reloadPage() {
+    return new Promise(resolve => {
+        location.reload(true); 
+        // 頁面完全加載後結束異步
+        window.onload = resolve('success'); 
+    });
+  }
+
   function dateCompare(dateStr1, dateStr2){
     const date1 = Date.parse(dateStr1);
     const date2 = Date.parse(dateStr2);
@@ -126,3 +123,41 @@
     }
   }
 </script>
+
+<!-- <div class="table">
+  <table width="800px">
+    圖表說明
+    <caption>Holiday List</caption>
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Name</th>
+        <th scope="col">Local Name</th>
+        <th scope="col">Type</th>
+        <th scope="col">Global</th>
+      </tr>
+    </thead>
+    <tbody>
+      /*<%for(let holiday of holidayList){%>*/
+        <tr>
+          <th scope="row"><%=holiday.date%></th>
+          <td><%=holiday.name%></td>
+          <td><%=holiday.localName%></td>
+          <td>
+            <%for(let type of holiday.types){%>
+              <%=type%>
+            <%}%>
+            </td>
+          <td><%=holiday.global%></td>
+        </tr>
+      <%}%>
+    </tbody>
+    表尾-->
+    <!-- <tfoot>
+      <tr>
+        <th scope="row">Total Days</th>
+        <td colspan="4">holidayList.length</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>   -->

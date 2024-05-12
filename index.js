@@ -58,7 +58,7 @@ app.post("/search", async (req, res) => {
         } else {
           uiParamObj.holidayList = newResultList;
         }
-        res.render("index.ejs", uiParamObj);
+        res.json(uiParamObj);
       } else {
         // TODO
       }
@@ -118,4 +118,3 @@ function dateCompare(dateStr1, dateStr2){
     return 1;
   }
 }
-// https://date.nager.at/swagger/index.html

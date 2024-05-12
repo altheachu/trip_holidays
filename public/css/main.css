@@ -26,7 +26,7 @@ footer {
   width: 200px;
 }
 
-.btn > input {
+.btn > button {
   border: 0px;
   border-radius: 10px;
   padding: 3px 0px;
