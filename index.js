@@ -17,8 +17,14 @@ app.listen(port, ()=>{
 app.get("/", async (req, res) => {
   try {
     const result = await axios.get(API_URL + "/api/v3/AvailableCountries");
+    const today = new Date();
+    const startDate = formatDate(today);
+    const endDate = formatDate(addDate(today, 14));
     const country_obj = {
       countries: result.data,
+      startDate: startDate,
+      endDate: endDate,
+      msgShow: false,
     }
     res.render("index.ejs", country_obj);
   } catch(error) {
@@ -34,15 +40,6 @@ app.post("/search", async (req, res) => {
     const destination = req.body.destination;
     const countriesResult = await axios.get(API_URL + "/api/v3/AvailableCountries");
     if (!validation(startDate, endDate, destination)){
-      // TODO 改成前端驗證
-      // const uiParamObj = {
-      //   errorMsg: 'StartDate, endDate, destination should not be empty. StartDate must be earlier than endDate.',
-      //   emptyMsg: undefined,
-      //   msgShow: 'Y',
-      //   tableShow: 'N',
-      //   countries: countriesResult.data,
-      // }
-      // res.render("index.ejs", uiParamObj); 
       res.redirect('/');
     } else {
       if(getDateYear(startDate) == getDateYear(endDate)){
@@ -51,22 +48,19 @@ app.post("/search", async (req, res) => {
         let newResultList = rList.filter((item) => {
           return filterByDate(item, startDate, endDate)
         });
-        console.log(newResultList);
-        const msgShow = newResultList.length > 0? 'N': 'Y';
-        const tableShow = newResultList.length > 0? 'Y' : 'N';
-        const tmpMsg = `No National Holidays in ${destination} during ${startDate} and ${endDate}`;
-        const emptyMsg = newResultList.length > 0? '': tmpMsg;
-
         const uiParamObj = {
-          holidayList: newResultList,
-          msgShow: msgShow,
-          tableShow: tableShow,
-          emptyMsg: emptyMsg,
+          startDate: startDate,
+          endDate: endDate,
           countries: countriesResult.data,
         };
+        if(newResultList==0){
+          uiParamObj.emptyFlag = "Y";
+        } else {
+          uiParamObj.holidayList = newResultList;
+        }
         res.render("index.ejs", uiParamObj);
       } else {
-
+        // TODO
       }
     }
   } catch(error) {
@@ -74,6 +68,17 @@ app.post("/search", async (req, res) => {
   }
   
 })
+
+function formatDate(date){
+  // 瑞典慣用的日期格式是 yyyy-MM-dd HH:mm:ss
+  let newDate = date.toLocaleString('sv');
+  return newDate.substr(0,10);
+}
+
+function addDate(date, addDays){
+  const longDate = date.setDate(date.getDate() + addDays);
+  return new Date(longDate);
+}
 
 function filterByDate(item, startDate, endDate){
   if(dateCompare(item.date, startDate) <= 0 && dateCompare(item.date, endDate) >= 0){

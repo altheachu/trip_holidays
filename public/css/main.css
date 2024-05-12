@@ -65,7 +65,7 @@ footer {
   font-size: large;
   color: white;
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   padding-top: 1%;
   padding-bottom: 1%;
   left: 25%;
@@ -91,4 +91,8 @@ footer {
   color: white;
   padding: 5px;
   border-radius: 5px;
+}
+
+.table{
+  background-color: white;
 }
