@@ -87,12 +87,28 @@ footer {
 }
 
 .msg{
-  background-color: #000000;
-  color: white;
+  background-color: white;
+  color: black;
   padding: 5px;
   border-radius: 5px;
+  display: none;
 }
 
-.table{
+.rTable{
   background-color: white;
+  line-height: 30px;
+  border-style: dotted;
+  border-color: #3c7f95;
+}
+
+.cap{
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: large;
+  background-color: white;
+  line-height: 50px;
+}
+
+.tableHead{
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: x-large;
 }

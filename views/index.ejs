@@ -31,7 +31,7 @@
   </div>
   <div class="result_container">
     <div class="msg">Find no result</div>
-    <div id="test"></div>     
+    <div id="table"></div>     
   </div>
 </div>
 
@@ -57,21 +57,34 @@
         if(xhr.readyState===4 && xhr.status===200){
           console.log("request success");
           let result = JSON.parse(xhr.responseText);
-          console.log(result);
-          document.querySelectorAll(".msg")[0].innerHTML = result.holidayList[0].localName;
-          const theadList = ["Date", "Name", "Local Name", "Type", "Global"];
-          let theadContent = "";
-          for(let i = 0; i < 5; i++){
-            theadContent += `<th>${theadList[i]}</th>`;
+          if(result.emptyFlag === "Y"){
+            document.querySelectorAll(".msg")[0].style.display = "block";
+            document.getElementById("table").innerHTML = "";
+          } else {
+            const theadList = ["Date", "Name", "Local Name", "Type", "Global"];
+            let theadContent = "";
+            for(let i = 0; i < 5; i++){
+              theadContent += `<th>${theadList[i]}</th>`;
+            }
+
+            let theadStr = `<thead class=".tableHead"><tr>${theadContent}</tr></thead>`;
+            let captionStr = `<caption class="cap">Holiday List</caption>`;
+            let tbodyStr = "";
+            for(let holiday of result.holidayList){
+              let date = `<th scope="row">${holiday.date}</th>`;
+              let name = `<th>${holiday.name}</th>`;
+              let localName = `<th>${holiday.localName}</th>`;
+              let typeStr = "";
+              for(let type of holiday.types){
+                typeStr += `<th>${type},</th>`;
+              }
+              let global = `<th>${holiday.global}</th>`;
+              tbodyStr += `<tr>${date}${name}${localName}${typeStr}${global}</tr>`
+            }
+            let tableStr = `<table width='800px' class="rTable">${captionStr}${theadStr}${tbodyStr}</table>`;
+            document.getElementById("table").innerHTML = tableStr;
+            // await reloadPage();
           }
-
-          let theadStr = `<thead><tr>${theadContent}</tr></thead>`;
-          let captionStr = "<caption>Holiday List</caption>";
-          let tbodyStr = "";
-          let tableStr = `<table width='800px'>${captionStr}${theadStr}${tbodyStr}</table>`;
-
-          document.getElementById("test").innerHTML = tableStr;
-          // await reloadPage();
         }
       }
       xhr.send(JSON.stringify(data));
@@ -135,36 +148,3 @@
     }
   }
 </script>
-
-<!-- <div class="table">
-  <table width="800px">
-    圖表說明
-    <caption>Holiday List</caption>
-    <thead>
-      <tr>
-        <th scope="col">Date</th>
-        <th scope="col">Name</th>
-        <th scope="col">Local Name</th>
-        <th scope="col">Type</th>
-        <th scope="col">Global</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <th scope="row"></th>
-          <td></td>
-          <td></td>
-          <td>
-            </td>
-          <td></td>
-        </tr>
-    </tbody>
-    表尾-->
-    <!-- <tfoot>
-      <tr>
-        <th scope="row">Total Days</th>
-        <td colspan="4">holidayList.length</td>
-      </tr>
-    </tfoot>
-  </table>
-</div>   -->
