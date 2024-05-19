@@ -84,6 +84,7 @@ footer {
   padding-top: 5%;
   padding-bottom: 1%;
   left: 25%;
+  width: 50%;
 }
 
 .msg{
@@ -96,19 +97,22 @@ footer {
 
 .rTable{
   background-color: white;
-  line-height: 30px;
-  border-style: dotted;
-  border-color: #3c7f95;
+  line-height: 40px;
 }
 
 .cap{
   font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: large;
-  background-color: white;
+  font-size: x-large;
+  background-color: #3c7f95;
+  color: white;
   line-height: 50px;
 }
 
 .tableHead{
   font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: x-large;
+  font-size: large;
+}
+
+td {
+  border-top: 2px dotted #3c7f95;
 }

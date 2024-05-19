@@ -66,19 +66,18 @@
             for(let i = 0; i < 5; i++){
               theadContent += `<th>${theadList[i]}</th>`;
             }
-
-            let theadStr = `<thead class=".tableHead"><tr>${theadContent}</tr></thead>`;
+            let theadStr = `<thead class="tableHead"><tr>${theadContent}</tr></thead>`;
             let captionStr = `<caption class="cap">Holiday List</caption>`;
             let tbodyStr = "";
             for(let holiday of result.holidayList){
-              let date = `<th scope="row">${holiday.date}</th>`;
-              let name = `<th>${holiday.name}</th>`;
-              let localName = `<th>${holiday.localName}</th>`;
+              let date = `<td>${holiday.date}</td>`;
+              let name = `<td>${holiday.name}</td>`;
+              let localName = `<td>${holiday.localName}</td>`;
               let typeStr = "";
               for(let type of holiday.types){
-                typeStr += `<th>${type},</th>`;
+                typeStr += `<td>${type},</td>`;
               }
-              let global = `<th>${holiday.global}</th>`;
+              let global = `<td>${holiday.global}</td>`;
               tbodyStr += `<tr>${date}${name}${localName}${typeStr}${global}</tr>`
             }
             let tableStr = `<table width='800px' class="rTable">${captionStr}${theadStr}${tbodyStr}</table>`;

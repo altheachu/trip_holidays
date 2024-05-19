@@ -42,31 +42,33 @@ app.post("/search", async (req, res) => {
     if (!validation(startDate, endDate, destination)){
       res.redirect('/');
     } else {
-      if(getDateYear(startDate) == getDateYear(endDate)){
-        const result = await axios.get(API_URL + `/api/v3/PublicHolidays/${getDateYear(startDate)}/${destination}`);
-        const rList = result.data;
-        let newResultList = rList.filter((item) => {
+      let uiParamObj = {
+        startDate: startDate,
+        endDate: endDate,
+        countries: countriesResult.data,
+      };
+      let newResultList;
+      const startResultList = await getResultList(startDate, destination);
+      newResultList = startResultList.filter((item) => {
+        return filterByDate(item, startDate, endDate)
+      });
+      if(getDateYear(startDate) !== getDateYear(endDate)){
+        const endResultList = await getResultList(endDate, destination);
+        let newEndYrList = endResultList.filter((item) => {
           return filterByDate(item, startDate, endDate)
         });
-        const uiParamObj = {
-          startDate: startDate,
-          endDate: endDate,
-          countries: countriesResult.data,
-        };
-        if(newResultList==0){
-          uiParamObj.emptyFlag = "Y";
-        } else {
-          uiParamObj.holidayList = newResultList;
-        }
-        res.json(uiParamObj);
-      } else {
-        // TODO
+        newResultList = newResultList.concat(newEndYrList);
       }
+      if(newResultList==0){
+        uiParamObj.emptyFlag = "Y";
+      } else {
+        uiParamObj.holidayList = newResultList;
+      }
+      res.json(uiParamObj);
     }
   } catch(error) {
     console.log(error);
   }
-  
 })
 
 function formatDate(date){
@@ -117,4 +119,9 @@ function dateCompare(dateStr1, dateStr2){
   } else {
     return 1;
   }
+}
+
+async function getResultList(date, destination){
+  const result = await axios.get(API_URL + `/api/v3/PublicHolidays/${getDateYear(date)}/${destination}`);
+  return result.data;
 }
