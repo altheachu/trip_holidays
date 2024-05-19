@@ -73,10 +73,11 @@
               let date = `<td>${holiday.date}</td>`;
               let name = `<td>${holiday.name}</td>`;
               let localName = `<td>${holiday.localName}</td>`;
-              let typeStr = "";
+              let typeStr = "<td>";
               for(let type of holiday.types){
-                typeStr += `<td>${type},</td>`;
+                typeStr += `${type},`;
               }
+              typeStr += "</td>";
               let global = `<td>${holiday.global}</td>`;
               tbodyStr += `<tr>${date}${name}${localName}${typeStr}${global}</tr>`
             }
